@@ -9,11 +9,14 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "pdfjs-dist": "^2.6.347",
+    "tone": "^14.7.77",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
+    "@types/webmidi": "^2.0.4",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
