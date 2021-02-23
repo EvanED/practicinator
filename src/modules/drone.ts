@@ -52,10 +52,14 @@ function delta_pitch_change(amount_half_steps: number)
 
 function toggle()
 {
-    if (drone_is_running)
+    if (drone_is_running) {
         stop_drone();
-    else
+        return false;
+    }
+    else {
         start_drone();
+        return true;
+    }
 }
 
 function set_volume(vol: number)

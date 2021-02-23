@@ -33,6 +33,7 @@ async function start_metronome()
     await set_up_metronome();
     Tone.Transport.start();
     metronome_is_running = true;
+    console.log(metronome_is_running)
 }
 
 function stop_metronome()
@@ -44,11 +45,15 @@ function stop_metronome()
 
 function toggle()
 {
-    console.log("Metronome.toggle");
-    if (metronome_is_running)
+    console.log("Metronome.toggle with is running " + metronome_is_running);
+    if (metronome_is_running) {
         stop_metronome();
-    else
+        return false;
+    }
+    else {
         start_metronome();
+        return true;
+    }
 }
 
 
