@@ -46,7 +46,7 @@ export default {
     methods: {
         change_bpm(event) {
             const new_bpm = parseInt(event.target.value);
-            Metronome.set_bpm(new_bpm);
+            Metronome.events.emit('set_bpm', new_bpm);
         },
         change_pitch(event) {
             console.log("change_pitch");
@@ -55,7 +55,7 @@ export default {
         },
         toggle_metronome(event) {
             console.log("App:toggle_metronome");
-            const is_on = Metronome.toggle();
+            const is_on = Metronome.events.emit('toggle');
             this.metronome.next_state = is_on ? "off" : "on";
         },
         toggle_drone(event) {

@@ -1,8 +1,11 @@
 import * as Tone from 'tone';
+import mitt from 'mitt';
 
 let metronome_has_been_set_up = false;
 let metronome_is_running = false;
 let metronome_oscillator: any = null;
+
+const listener = mitt();
 
 async function set_up_metronome()
 {
@@ -56,6 +59,10 @@ function toggle()
     }
 }
 
+listener.on('start',  () => start_metronome());
+listener.on('stop',   () => stop_metronome());
+listener.on('toggle', () => toggle());
+
 
 function set_bpm(bpm: number)
 {
@@ -73,6 +80,10 @@ function set_volume(vol: number)
     metronome_oscillator.volume.value = vol;
 }
 
+listener.on('set_bpm',    (x) => set_bpm(x));
+listener.on('bpm_change', (x) => bpm_change(x));
+listener.on('set_volume', (x) => set_volume(x));
+
 export {
-    start_metronome, stop_metronome, toggle, bpm_change, set_bpm, set_volume
+    listener as events,
 };
