@@ -1,8 +1,12 @@
 import * as Tone from 'tone';
+import { reactive, watch, ref, toRefs } from 'vue'
 
-let frequency = "A3";
+const current_status = reactive({
+    active: false,
+    pitch: "A3",
+})
+
 let drone_oscillator: any = null;
-let drone_is_running = false;
 
 async function set_up_drone()
 {
@@ -11,55 +15,37 @@ async function set_up_drone()
     }
 
     // make and start a 440hz sine tone
-    drone_oscillator = new Tone.Oscillator(frequency, "sine4").toDestination();
+    drone_oscillator = new Tone.Oscillator(current_status.pitch, "sine4").toDestination();
     drone_oscillator.volume.value = -10;
 }
 
 async function start_drone()
 {
-    if (drone_is_running) return;
     await set_up_drone();
     drone_oscillator.start();
-    drone_is_running = true;
 }
 
 function stop_drone()
 {
-    if (!drone_is_running) return;
     drone_oscillator.stop();
-    drone_is_running = false;
 }
 
 function pitch_change(base_tone: string, amount_half_steps: number)
 {
-    frequency = Tone.Frequency(base_tone).transpose(amount_half_steps).toNote();
-    if (drone_is_running) {
-        stop_drone();
-        start_drone();
-    }
-    return frequency;
+    current_status.pitch = Tone.Frequency(base_tone).transpose(amount_half_steps).toNote();
+    return current_status.pitch;
 }
 
 function delta_pitch_change(amount_half_steps: number)
 {
-    frequency = Tone.Frequency(frequency).transpose(amount_half_steps).toNote();
-    if (drone_is_running) {
-        stop_drone();
-        start_drone();
-    }
-    return frequency;
+    current_status.pitch = Tone.Frequency(current_status.pitch).transpose(amount_half_steps).toNote();
+    return current_status.pitch;
 }
 
 function toggle()
 {
-    if (drone_is_running) {
-        stop_drone();
-        return false;
-    }
-    else {
-        start_drone();
-        return true;
-    }
+    current_status.active = !current_status.active;
+    return current_status.active;
 }
 
 function set_volume(vol: number)
@@ -68,4 +54,18 @@ function set_volume(vol: number)
     drone_oscillator.volume.value = vol;
 }
 
-export { toggle, pitch_change, set_volume, delta_pitch_change };
+watch(() => current_status.active, (new_value, old_value) => {
+    if (new_value)
+        start_drone();
+    else
+        stop_drone();
+});
+
+watch(() => current_status.pitch, (new_value, old_value) => {
+    if (current_status.active) {
+        stop_drone();
+        start_drone();
+    }
+});
+
+export { toggle, pitch_change, set_volume, delta_pitch_change, current_status as status };

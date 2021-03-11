@@ -12,9 +12,9 @@
 
         <router-link to="/drone">Drone</router-link>
         <div style="width:0.5em; display:inline-block"></div>
-        <input type="text" size="5" v-bind:value="drone.pitch" @input="change_pitch">
-        <button style="margin-left:0.5em" @click="toggle_drone">{{drone.next_state}}</button>
-        {{drone.pitch}}
+        <input type="text" size="5" v-bind:value="pitch" @change="change_pitch">
+        <button style="margin-left:0.5em" @click="toggle_drone">{{drone_next_state}}</button>
+        {{pitch}}
         |
 
         <!--<router-link to="/music">Music</router-link> |-->
@@ -32,16 +32,14 @@ export default {
     name: 'hello',
     data () {
         return {
-            drone: {
-                pitch: "A3",
-                next_state: "on",
-            },
             dummy: Midi,
         };
     },
     computed: {
-        bpm() { return Metronome.status.bpm },
+        bpm()   { return Metronome.status.bpm },
+        pitch() { return Drone.status.pitch },
         metronome_next_state() { return Metronome.status.active ? "off" : "on"; },
+        drone_next_state()     { return Drone.status.active     ? "off" : "on"; },
     },
     methods: {
         change_bpm(event) {
@@ -50,8 +48,7 @@ export default {
         },
         change_pitch(event) {
             console.log("change_pitch");
-            this.drone.pitch = event.target.value;
-            Drone.pitch_change(this.drone.pitch, 0);
+            Drone.pitch_change(event.target.value, 0);
         },
         toggle_metronome(event) {
             console.log("App:toggle_metronome");
@@ -60,7 +57,6 @@ export default {
         toggle_drone(event) {
             console.log("App:toggle_drone");
             const is_on = Drone.toggle();
-            this.drone.next_state = is_on ? "off" : "on";
         }
     }
 }
