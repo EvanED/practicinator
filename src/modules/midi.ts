@@ -10,7 +10,7 @@ function on_midi_load_failed(...rest: any[])
 
 function midi_toggle_metronome()
 {
-    //Metronome.toggle();
+    Metronome.status.active = !Metronome.status.active;
 }
 
 
@@ -47,8 +47,8 @@ function set_up_midi_mapping()
     m.set("192-0", midi_toggle_metronome);
     m.set("192-1", midi_toggle_drone);
 
-    //m.set("192-2", () => Metronome.bpm_change(-10));
-    //m.set("192-3", () => Metronome.bpm_change(10));
+    m.set("192-2", () => Metronome.status.bpm -= 10);
+    m.set("192-3", () => Metronome.status.bpm += 10);
 
     m.set("176-27", midi_vol1_change);
     m.set("176-7",  midi_vol2_change);

@@ -1,11 +1,15 @@
 import * as Tone from 'tone';
-import mitt from 'mitt';
+import { reactive, watch, ref, toRefs } from 'vue'
 
 let metronome_has_been_set_up = false;
 let metronome_is_running = false;
 let metronome_oscillator: any = null;
 
-const listener = mitt();
+const current_status = reactive({
+    active: false,
+    bpm: 120,
+    volume: -20,
+});
 
 async function set_up_metronome()
 {
@@ -59,11 +63,6 @@ function toggle()
     }
 }
 
-listener.on('start',  () => start_metronome());
-listener.on('stop',   () => stop_metronome());
-listener.on('toggle', () => toggle());
-
-
 function set_bpm(bpm: number)
 {
     Tone.Transport.bpm.value = bpm;
@@ -80,10 +79,21 @@ function set_volume(vol: number)
     metronome_oscillator.volume.value = vol;
 }
 
-listener.on('set_bpm',    (x) => set_bpm(x));
-listener.on('bpm_change', (x) => bpm_change(x));
-listener.on('set_volume', (x) => set_volume(x));
+watch(() => current_status.active, (new_value, old_value) => {
+    if (new_value)
+        start_metronome();
+    else
+        stop_metronome();
+});
+
+watch(() => current_status.bpm, (new_value, old_value) => {
+    set_bpm(new_value);
+});
+
+watch(() => current_status.volume, (new_value, old_value) => {
+    set_volume(new_value);
+});
 
 export {
-    listener as events,
+    current_status as status,
 };
