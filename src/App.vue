@@ -48,7 +48,7 @@ export default {
         },
         change_pitch(event) {
             console.log("change_pitch");
-            Drone.pitch_change(event.target.value, 0);
+            Drone.status.pitch = event.target.value;
         },
         toggle_metronome(event) {
             console.log("App:toggle_metronome");

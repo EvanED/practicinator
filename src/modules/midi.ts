@@ -24,7 +24,7 @@ function midi_vol_change(midi_message: any, module: any)
 {
     const midi_vol = midi_message.data[2];
     const vol_scaled = midi_vol / 127 * 50;
-    module.set_volume(-vol_scaled);
+    module.status.volume = -vol_scaled;
 }
 
 
