@@ -2,7 +2,6 @@ import * as Tone from 'tone';
 import { reactive, watch, ref, toRefs } from 'vue'
 
 let metronome_has_been_set_up = false;
-let metronome_is_running = false;
 let metronome_oscillator: any = null;
 
 const current_status = reactive({
@@ -36,31 +35,19 @@ async function set_up_metronome()
 
 async function start_metronome()
 {
-    if (metronome_is_running) return;
     await set_up_metronome();
     Tone.Transport.start();
-    metronome_is_running = true;
-    console.log(metronome_is_running)
 }
 
 function stop_metronome()
 {
-    metronome_is_running = false;
     set_up_metronome();
     Tone.Transport.stop();
 }
 
 function toggle()
 {
-    console.log("Metronome.toggle with is running " + metronome_is_running);
-    if (metronome_is_running) {
-        stop_metronome();
-        return false;
-    }
-    else {
-        start_metronome();
-        return true;
-    }
+    current_status.active = !current_status.active;
 }
 
 function set_bpm(bpm: number)
