@@ -1,3 +1,4 @@
+<!--
 <template>
     <div class="about">
         <button id="next" @click="next_page">next</button>
@@ -120,3 +121,4 @@ export default {
     },
 }
 </script>
+-->

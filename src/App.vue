@@ -17,7 +17,7 @@
         {{drone.pitch}}
         |
 
-        <router-link to="/music">Music</router-link> |
+        <!--<router-link to="/music">Music</router-link> |-->
         <router-link to="/library">Library</router-link>
     </div>
     <router-view/>
